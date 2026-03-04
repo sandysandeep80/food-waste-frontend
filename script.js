@@ -1,38 +1,4 @@
-const isFileProtocol = window.location.protocol === "file:";
-const DEFAULT_API_BASE = (isFileProtocol || ["localhost", "127.0.0.1"].includes(window.location.hostname))
-  ? "http://localhost:10000"
-  : "https://food-waste-backend-1.onrender.com";
-
-function cleanApiBase(value) {
-  return String(value || "").trim().replace(/\/+$/, "");
-}
-
-function resolveApiBase() {
-  const isLocalFrontend = isFileProtocol || ["localhost", "127.0.0.1"].includes(window.location.hostname);
-  const storedApiBase = cleanApiBase(localStorage.getItem("apiBase"));
-
-  if (!storedApiBase) {
-    return DEFAULT_API_BASE;
-  }
-
-  if (!isLocalFrontend) {
-    return storedApiBase;
-  }
-
-  try {
-    const parsed = new URL(storedApiBase);
-    const isLocalBackend = ["localhost", "127.0.0.1"].includes(parsed.hostname);
-    if (isLocalBackend) {
-      return storedApiBase;
-    }
-  } catch (err) {
-    // Ignore malformed saved value and fall back to default local backend.
-  }
-
-  return DEFAULT_API_BASE;
-}
-
-const API_BASE = resolveApiBase();
+const API_BASE = "https://food-waste-backend-3.onrender.com";
 
 function normalizeToken(token) {
   if (!token) return "";
