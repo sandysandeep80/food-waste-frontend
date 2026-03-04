@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rescue Radar | Food Waste Control Room</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="bg-orb bg-orb-a"></div>
+  <div class="bg-orb bg-orb-b"></div>
+
+  <main class="app-shell">
+    <header class="hero">
+      <p class="kicker">Food Waste Management</p>
+      <h1>Rescue Radar</h1>
+      <p class="hero-copy">
+        A live control room for food rescue teams. Track supply, route requests,
+        and watch your local impact in real time.
+      </p>
+      <div class="hero-meta">
+        <span id="roleBadge" class="badge badge-muted">Guest</span>
+        <span id="authState" class="badge">Signed out</span>
+      </div>
+    </header>
+
+    <section class="panel auth-panel">
+      <h2>Access</h2>
+      <p class="muted">Mode is based on the account role. Use a different account to switch mode.</p>
+      <p id="apiStatus" class="muted">Backend: checking...</p>
+      <div class="auth-grid">
+        <form id="loginForm" class="form">
+          <h3>Login</h3>
+          <input id="loginUsername" type="text" placeholder="Username" required>
+          <input id="loginPassword" type="password" placeholder="Password" required>
+          <button type="submit">Login</button>
+        </form>
+
+        <form id="registerForm" class="form">
+          <h3>Create User</h3>
+          <input id="registerUsername" type="text" placeholder="Username" required>
+          <input id="registerPassword" type="password" placeholder="Password" required>
+          <select id="registerRole" required>
+            <option value="admin">Admin</option>
+            <option value="donor">Donor</option>
+            <option value="ngo">NGO</option>
+          </select>
+          <button type="submit">Register</button>
+        </form>
+
+        <form id="forgotPasswordForm" class="form">
+          <h3>Forgot Password</h3>
+          <input id="forgotUsername" type="text" placeholder="Username" required>
+          <input id="forgotNewPassword" type="password" placeholder="New password (min 6 chars)" minlength="6" required>
+          <button type="submit">Reset Password</button>
+        </form>
+      </div>
+      <button id="logoutBtn" class="ghost-btn">Logout</button>
+    </section>
+
+    <section class="stats-grid">
+      <article class="stat-card">
+        <p>Total Listings</p>
+        <h3 id="statTotalFoods">0</h3>
+      </article>
+      <article class="stat-card">
+        <p>Total Quantity</p>
+        <h3 id="statTotalQuantity">0</h3>
+      </article>
+      <article class="stat-card">
+        <p>Low Stock Alerts</p>
+        <h3 id="statLowStock">0</h3>
+      </article>
+      <article class="stat-card">
+        <p>Added Last 7 Days</p>
+        <h3 id="statRecent">0</h3>
+      </article>
+    </section>
+
+    <section id="addFoodPanel" class="panel">
+      <h2>Add Food Listing</h2>
+      <form id="addFoodForm" class="inline-form">
+        <input id="foodName" placeholder="Food name" required>
+        <input id="quantity" type="number" min="1" placeholder="Quantity" required>
+        <input id="location" placeholder="Location" required>
+        <input id="contactName" placeholder="Contact person" required>
+        <input id="contactNumber" placeholder="Contact number" required>
+        <select id="category">
+          <option value="mixed">Mixed</option>
+          <option value="veg">Veg</option>
+          <option value="non-veg">Non-veg</option>
+          <option value="bakery">Bakery</option>
+          <option value="packaged">Packaged</option>
+        </select>
+        <button type="submit">Publish Listing</button>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2>Food Feed</h2>
+      <form id="filterForm" class="inline-form">
+        <input id="searchInput" placeholder="Search food">
+        <input id="filterLocation" placeholder="Filter by location">
+        <input id="filterMinQty" type="number" min="1" placeholder="Min qty">
+        <select id="filterCategory">
+          <option value="">All categories</option>
+          <option value="mixed">Mixed</option>
+          <option value="veg">Veg</option>
+          <option value="non-veg">Non-veg</option>
+          <option value="bakery">Bakery</option>
+          <option value="packaged">Packaged</option>
+        </select>
+        <button type="submit">Apply</button>
+      </form>
+      <div id="foodList" class="list-grid"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Request Stream</h2>
+      <div id="requestList" class="list-grid"></div>
+    </section>
+
+    <section class="panel insights-panel">
+      <h2>Rescue Heat</h2>
+      <div class="insights-grid">
+        <article>
+          <h3>Top Locations</h3>
+          <ul id="locationInsights" class="insight-list"></ul>
+        </article>
+        <article>
+          <h3>Category Mix</h3>
+          <ul id="categoryInsights" class="insight-list"></ul>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
