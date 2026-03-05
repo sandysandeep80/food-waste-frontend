@@ -63,6 +63,40 @@ body {
   gap: 18px;
 }
 
+.module-stepper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.module-tab {
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.12);
+  color: #f9fbff;
+  border-radius: 999px;
+  padding: 7px 12px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.module-tab.active {
+  background: linear-gradient(120deg, var(--brand) 0%, #ec8b25 100%);
+  border-color: transparent;
+}
+
+.module-page {
+  display: none;
+}
+
+.module-page.active {
+  display: block;
+}
+
+.module-page.unavailable {
+  display: none !important;
+}
+
 .hero,
 .panel,
 .stat-card {
@@ -88,6 +122,7 @@ body {
   height: 320px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.12);
+  pointer-events: none;
 }
 
 .kicker {
@@ -208,6 +243,13 @@ button:hover {
   box-shadow: 0 10px 22px rgba(207, 77, 34, 0.25);
 }
 
+button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
 .ghost-btn {
   margin-top: 10px;
   background: transparent;
@@ -219,6 +261,17 @@ button:hover {
 .ghost-btn:hover {
   background: var(--glass);
   box-shadow: none;
+}
+
+.module-actions {
+  margin-top: 14px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.stats-actions {
+  grid-column: 1 / -1;
 }
 
 .stats-grid {
