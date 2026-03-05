@@ -39,8 +39,7 @@ const moduleIds = [
   "accessModule",
   "feedModule",
   "requestModule",
-  "insightsModule",
-  "accountModule"
+  "insightsModule"
 ];
 let activeModuleId = "accessModule";
 
@@ -99,7 +98,7 @@ function setModuleAvailability() {
 
     let isAvailable = false;
 
-    if (id === "accessModule" || id === "accountModule") {
+    if (id === "accessModule") {
       isAvailable = true;
     } else if (!isLoggedIn) {
       isAvailable = false;
@@ -112,6 +111,11 @@ function setModuleAvailability() {
 }
 
 function goToAdjacentModule(direction) {
+  if (!state.token && direction > 0 && activeModuleId === "accessModule") {
+    showToast("Please login first");
+    return;
+  }
+
   const visibleModules = getVisibleModuleElements();
   if (!visibleModules.length) return;
 
@@ -663,6 +667,7 @@ function wireEvents() {
 
 document.addEventListener("DOMContentLoaded", async () => {
   wireEvents();
+  clearSession();
   setActiveModule("accessModule");
   await checkApi();
   setAuthUI();

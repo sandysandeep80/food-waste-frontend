@@ -31,21 +31,40 @@
 
     <section id="accessModule" class="panel auth-panel module-page">
       <h2>Access</h2>
-      <p class="muted">Page 1: Login only.</p>
+      <p class="muted">Login, create account, and reset password.</p>
       <p id="apiStatus" class="muted">Backend: checking...</p>
-      <form id="loginForm" class="form">
-        <h3>Login</h3>
-        <input id="loginUsername" type="text" placeholder="Username" required>
-        <input id="loginPassword" type="password" placeholder="Password" required>
-        <button type="submit">Login</button>
-      </form>
-      <div class="module-actions">
-        <button type="button" class="ghost-btn" data-nav="next">Go To Account Page</button>
+      <div class="auth-grid">
+        <form id="loginForm" class="form">
+          <h3>Login</h3>
+          <input id="loginUsername" type="text" placeholder="Username" required>
+          <input id="loginPassword" type="password" placeholder="Password" required>
+          <button type="submit">Login</button>
+        </form>
+
+        <form id="registerForm" class="form">
+          <h3>Create User</h3>
+          <input id="registerUsername" type="text" placeholder="Username" required>
+          <input id="registerPassword" type="password" placeholder="Password" required>
+          <select id="registerRole" required>
+            <option value="admin">Admin</option>
+            <option value="donor">Donor</option>
+            <option value="ngo">NGO</option>
+          </select>
+          <button type="submit">Register</button>
+        </form>
+
+        <form id="forgotPasswordForm" class="form">
+          <h3>Forgot Password</h3>
+          <input id="forgotUsername" type="text" placeholder="Username" required>
+          <input id="forgotNewPassword" type="password" placeholder="New password (min 6 chars)" minlength="6" required>
+          <button type="submit">Reset Password</button>
+        </form>
       </div>
+      <button id="logoutBtn" class="ghost-btn">Logout</button>
     </section>
 
     <section id="feedModule" class="panel module-page">
-      <h2>Food Feed (Page 2)</h2>
+      <h2>Food Feed</h2>
       <div id="addFoodPanel">
         <h3>Add Food Listing</h3>
         <form id="addFoodForm" class="inline-form">
@@ -83,21 +102,21 @@
       <div id="foodList" class="list-grid"></div>
       <div class="module-actions">
         <button type="button" class="ghost-btn" data-nav="prev">Previous</button>
-        <button type="button" class="ghost-btn" data-nav="next">Next Module</button>
+        <button type="button" class="ghost-btn" data-nav="next">Next</button>
       </div>
     </section>
 
     <section id="requestModule" class="panel module-page">
-      <h2>Request Stream (Page 3)</h2>
+      <h2>Request Stream</h2>
       <div id="requestList" class="list-grid"></div>
       <div class="module-actions">
         <button type="button" class="ghost-btn" data-nav="prev">Previous</button>
-        <button type="button" class="ghost-btn" data-nav="next">Next Module</button>
+        <button type="button" class="ghost-btn" data-nav="next">Next</button>
       </div>
     </section>
 
     <section id="insightsModule" class="panel insights-panel module-page">
-      <h2>Rescue Heat (Page 4)</h2>
+      <h2>Rescue Heat</h2>
       <div class="stats-grid">
         <article class="stat-card">
           <p>Total Listings</p>
@@ -128,35 +147,7 @@
       </div>
       <div class="module-actions">
         <button type="button" class="ghost-btn" data-nav="prev">Previous</button>
-        <button type="button" class="ghost-btn" data-nav="next">Next Module</button>
-      </div>
-    </section>
-
-    <section id="accountModule" class="panel module-page">
-      <h2>Account (Page 5)</h2>
-      <div class="auth-grid">
-        <form id="registerForm" class="form">
-          <h3>Create User</h3>
-          <input id="registerUsername" type="text" placeholder="Username" required>
-          <input id="registerPassword" type="password" placeholder="Password" required>
-          <select id="registerRole" required>
-            <option value="admin">Admin</option>
-            <option value="donor">Donor</option>
-            <option value="ngo">NGO</option>
-          </select>
-          <button type="submit">Register</button>
-        </form>
-
-        <form id="forgotPasswordForm" class="form">
-          <h3>Forgot Password</h3>
-          <input id="forgotUsername" type="text" placeholder="Username" required>
-          <input id="forgotNewPassword" type="password" placeholder="New password (min 6 chars)" minlength="6" required>
-          <button type="submit">Reset Password</button>
-        </form>
-      </div>
-      <button id="logoutBtn" class="ghost-btn">Logout</button>
-      <div class="module-actions">
-        <button type="button" class="ghost-btn" data-nav="prev">Previous</button>
+        <button type="button" class="ghost-btn" data-nav="next">Next</button>
         <button type="button" class="ghost-btn" data-nav="first">Back To Login</button>
       </div>
     </section>
