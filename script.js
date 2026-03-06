@@ -307,7 +307,16 @@ function buildFoodQuery() {
   if (location) params.set("location", location);
   if (minQuantity) params.set("minQuantity", minQuantity);
   if (category) params.set("category", category);
+  // Prevent stale cached feed responses across roles/sessions.
+  params.set("_ts", Date.now().toString());
   return params.toString() ? `?${params.toString()}` : "";
+}
+
+function resetFeedFilters() {
+  const filterForm = document.getElementById("filterForm");
+  if (filterForm) {
+    filterForm.reset();
+  }
 }
 
 function renderFoods(foods) {
@@ -509,6 +518,7 @@ async function handleLogin(event) {
     });
 
     applySession(username, data.token, data.role);
+    resetFeedFilters();
     await Promise.all([loadFoods(), loadRequests(), loadInsights()]);
     showToast(`Logged in as ${data.role}`);
     setAuthMessage(`Login successful. Welcome ${username}.`);
@@ -547,6 +557,7 @@ async function handleRegister(event) {
     });
 
     applySession(username, loginData.token, loginData.role);
+    resetFeedFilters();
     await Promise.all([loadFoods(), loadRequests(), loadInsights()]);
     showToast(`Registered and logged in as ${loginData.role}`);
     setAuthMessage(`Registered successfully as ${loginData.role}.`);
@@ -668,6 +679,7 @@ async function handleFoodListClick(event) {
 
 function handleLogout() {
   clearSession();
+  resetFeedFilters();
   renderRequests([]);
   loadInsights().catch(() => {});
   setActiveModule("accessModule");
