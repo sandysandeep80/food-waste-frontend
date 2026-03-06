@@ -32,7 +32,6 @@
     <section id="accessModule" class="panel auth-panel module-page">
       <h2>Access</h2>
       <p class="muted">Login, create account, and reset password.</p>
-      <p id="apiStatus" class="muted">Backend: checking...</p>
       <div class="auth-grid">
         <form id="loginForm" class="form">
           <h3>Login</h3>
@@ -144,6 +143,14 @@
           <p>Added Last 7 Days</p>
           <h3 id="statRecent">0</h3>
         </article>
+        <article class="stat-card">
+          <p>Donor Food History</p>
+          <h3 id="statDonorHistory">0</h3>
+        </article>
+        <article class="stat-card">
+          <p>NGO Request History</p>
+          <h3 id="statNgoHistory">0</h3>
+        </article>
       </div>
       <div class="insights-grid">
         <article>
@@ -153,6 +160,10 @@
         <article>
           <h3>Category Mix</h3>
           <ul id="categoryInsights" class="insight-list"></ul>
+        </article>
+        <article>
+          <h3>Food History</h3>
+          <ul id="foodHistoryList" class="insight-list"></ul>
         </article>
       </div>
       <div class="module-actions">

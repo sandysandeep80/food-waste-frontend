@@ -32,7 +32,9 @@ function removeStoredValue(key) {
 const state = {
   token: normalizeToken(getStoredValue("token")),
   role: getStoredValue("role") || "",
-  username: ""
+  username: "",
+  foodsHistory: [],
+  requestsHistory: []
 };
 
 const moduleIds = [
@@ -380,12 +382,16 @@ function renderInsights(insights) {
   document.getElementById("statTotalQuantity").textContent = insights.totalQuantity || 0;
   document.getElementById("statLowStock").textContent = insights.lowStockCount || 0;
   document.getElementById("statRecent").textContent = insights.recentCount || 0;
+  document.getElementById("statDonorHistory").textContent = state.foodsHistory.length || 0;
+  document.getElementById("statNgoHistory").textContent = state.requestsHistory.length || 0;
 
   const locationInsights = document.getElementById("locationInsights");
   const categoryInsights = document.getElementById("categoryInsights");
+  const foodHistoryList = document.getElementById("foodHistoryList");
 
   locationInsights.innerHTML = "";
   categoryInsights.innerHTML = "";
+  foodHistoryList.innerHTML = "";
 
   const locations = insights.byLocation || [];
   const categories = insights.byCategory || [];
@@ -409,6 +415,19 @@ function renderInsights(insights) {
       categoryInsights.appendChild(li);
     });
   }
+
+  if (!state.foodsHistory.length) {
+    foodHistoryList.innerHTML = "<li>No food history yet.</li>";
+  } else {
+    state.foodsHistory.slice(0, 20).forEach((food) => {
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <strong>${food.foodName || "Food"} ${food.category || "mixed"} ${food.location || "Unknown"} | Qty: ${food.quantity ?? "-"}</strong>
+        <div class="muted">Contact: ${food.contactName || "-"} | ${food.contactNumber || "-"}</div>
+      `;
+      foodHistoryList.appendChild(li);
+    });
+  }
 }
 
 async function loadFoods() {
@@ -419,25 +438,37 @@ async function loadFoods() {
 
   try {
     const foods = await api(`/foods${buildFoodQuery()}`);
-    renderFoods(Array.isArray(foods) ? foods : []);
+    const safeFoods = Array.isArray(foods) ? foods : [];
+    state.foodsHistory = safeFoods;
+    renderFoods(safeFoods);
+    const donorHistory = document.getElementById("statDonorHistory");
+    if (donorHistory) donorHistory.textContent = state.foodsHistory.length || 0;
   } catch (err) {
     if (list) {
       list.innerHTML = `<article class="item"><p class="muted">Unable to load feed right now.</p></article>`;
     }
+    state.foodsHistory = [];
     showToast(err.message);
   }
 }
 
 async function loadRequests() {
   if (!state.token) {
+    state.requestsHistory = [];
+    const ngoHistory = document.getElementById("statNgoHistory");
+    if (ngoHistory) ngoHistory.textContent = 0;
     renderRequests([]);
     return;
   }
 
   try {
     const requests = await api("/requests");
+    state.requestsHistory = Array.isArray(requests) ? requests : [];
+    const ngoHistory = document.getElementById("statNgoHistory");
+    if (ngoHistory) ngoHistory.textContent = state.requestsHistory.length || 0;
     renderRequests(requests);
   } catch (err) {
+    state.requestsHistory = [];
     showToast(err.message);
   }
 }
