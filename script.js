@@ -669,9 +669,14 @@ async function handleFoodListClick(event) {
 function handleLogout() {
   clearSession();
   renderRequests([]);
-  loadInsights();
+  loadInsights().catch(() => {});
   setActiveModule("accessModule");
   showToast("Logged out");
+  const cleanUrl = `${window.location.origin}${window.location.pathname}`;
+  setTimeout(() => {
+    window.location.replace(cleanUrl);
+    setTimeout(() => window.location.reload(), 120);
+  }, 200);
 }
 
 function wireEvents() {
