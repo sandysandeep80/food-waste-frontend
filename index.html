@@ -10,167 +10,280 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="bg-orb bg-orb-a"></div>
-  <div class="bg-orb bg-orb-b"></div>
+  <div class="page-glow page-glow-a"></div>
+  <div class="page-glow page-glow-b"></div>
 
-  <main class="app-shell">
-    <header class="hero">
-      <p class="kicker">Food Waste Management</p>
-      <h1>Rescue Radar</h1>
-      <p class="hero-copy">
-        A live control room for food rescue teams. Track supply, route requests,
-        and watch your local impact in real time.
+  <main class="dashboard-shell">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-mark">RR</div>
+        <div>
+          <p class="sidebar-kicker">Food Rescue</p>
+          <h1 class="sidebar-title">Rescue Radar</h1>
+        </div>
+      </div>
+
+      <p class="sidebar-copy">
+        A modern control room for donors, NGOs, and admins to manage food rescue, requests, and delivery visibility.
       </p>
-      <div class="hero-meta">
-        <span id="roleBadge" class="badge badge-muted">Guest</span>
-        <span id="authState" class="badge">Signed out</span>
+
+      <nav id="moduleStepper" class="module-stepper"></nav>
+
+      <div class="sidebar-support">
+        <p class="support-label">Live Workflow</p>
+        <div class="support-stat">
+          <span>Track food</span>
+          <strong>Pickup ready</strong>
+        </div>
+        <div class="support-stat">
+          <span>Need help?</span>
+          <strong>support@rescueradar.app</strong>
+        </div>
       </div>
-    </header>
+    </aside>
 
-    <nav id="moduleStepper" class="module-stepper"></nav>
+    <section class="content-shell">
+      <header class="hero">
+        <div>
+          <p class="kicker">Food Waste Management Dashboard</p>
+          <h2 class="hero-title">Donation and pickup dashboard</h2>
+          <p class="hero-copy">
+            Monitor supply, assign rescue routes, and view history in one clean admin-style workspace.
+          </p>
+        </div>
+        <div class="hero-meta">
+          <span id="roleBadge" class="badge badge-muted">Guest</span>
+          <span id="authState" class="badge">Signed out</span>
+        </div>
+      </header>
 
-    <section id="accessModule" class="panel auth-panel module-page">
-      <h2>Access</h2>
-      <p class="muted">Login, create account, and reset password.</p>
-      <div class="auth-grid">
-        <form id="loginForm" class="form">
-          <h3>Login</h3>
-          <input id="loginUsername" type="text" placeholder="Username" required>
-          <input id="loginPassword" type="password" placeholder="Password" required>
-          <button type="submit">Login</button>
-        </form>
+      <section id="accessModule" class="panel auth-panel module-page">
+        <div class="panel-head">
+          <div>
+            <p class="section-kicker">Access Center</p>
+            <h2>Login and account access</h2>
+          </div>
+          <div class="status-chip">Secure entry</div>
+        </div>
 
-        <form id="registerForm" class="form">
-          <h3>Create User</h3>
-          <input id="registerUsername" type="text" placeholder="Username" required>
-          <input id="registerPassword" type="password" placeholder="Password" required>
-          <select id="registerRole" required>
-            <option value="admin">Admin</option>
-            <option value="donor">Donor</option>
-            <option value="ngo">NGO</option>
-          </select>
-          <button type="submit">Register</button>
-        </form>
+        <div class="auth-grid">
+          <form id="loginForm" class="form auth-card">
+            <h3>Login</h3>
+            <input id="loginUsername" type="text" placeholder="Username" required>
+            <input id="loginPassword" type="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+          </form>
 
-        <form id="forgotPasswordForm" class="form">
-          <h3>Forgot Password</h3>
-          <input id="forgotUsername" type="text" placeholder="Username" required>
-          <input id="forgotNewPassword" type="password" placeholder="New password (min 6 chars)" minlength="6" required>
-          <button type="submit">Reset Password</button>
-        </form>
-      </div>
-      <section class="support-card" aria-label="Support and Help">
-        <h3>Support & Help</h3>
-        <p class="muted">If login or feed is not working, try these quick steps:</p>
-        <ol class="support-list">
-          <li>Hard refresh the page with <strong>Ctrl + Shift + R</strong>.</li>
-          <li>Clear browser site data for this domain.</li>
-          <li>Use Forgot Password and login again.</li>
-        </ol>
-        <p class="muted">Need help now: <a href="mailto:support@rescueradar.app">support@rescueradar.app</a></p>
+          <form id="registerForm" class="form auth-card">
+            <h3>Create User</h3>
+            <input id="registerUsername" type="text" placeholder="Username" required>
+            <input id="registerPassword" type="password" placeholder="Password" required>
+            <select id="registerRole" required>
+              <option value="admin">Admin</option>
+              <option value="donor">Donor</option>
+              <option value="ngo">NGO</option>
+            </select>
+            <button type="submit">Register</button>
+          </form>
+
+          <form id="forgotPasswordForm" class="form auth-card">
+            <h3>Forgot Password</h3>
+            <input id="forgotUsername" type="text" placeholder="Username" required>
+            <input id="forgotNewPassword" type="password" placeholder="New password (min 6 chars)" minlength="6" required>
+            <button type="submit">Reset Password</button>
+          </form>
+        </div>
+
+        <div class="dashboard-preview">
+          <article class="preview-card preview-card-primary">
+            <p>Food rescue pipeline</p>
+            <strong>Donor -> NGO -> Delivery</strong>
+            <span>Track donations, requests, and impact from one dashboard.</span>
+          </article>
+          <article class="preview-card">
+            <p>Fast actions</p>
+            <strong>Register, login, reset</strong>
+            <span>All access tools stay on one page for faster onboarding.</span>
+          </article>
+          <article class="preview-card">
+            <p>Support</p>
+            <strong>Need help?</strong>
+            <span>Refresh the page, check your account, or contact support@rescueradar.app.</span>
+          </article>
+        </div>
+
+        <div class="panel-actions">
+          <button id="logoutBtn" class="ghost-btn" type="button">Logout</button>
+        </div>
       </section>
-      <button id="logoutBtn" class="ghost-btn">Logout</button>
-    </section>
 
-    <section id="feedModule" class="panel module-page">
-      <h2>Food Feed</h2>
-      <div id="addFoodPanel">
-        <h3>Add Food Listing</h3>
-        <form id="addFoodForm" class="inline-form">
-          <input id="foodName" placeholder="Food name" required>
-          <input id="quantity" type="number" min="1" placeholder="Quantity" required>
-          <input id="location" placeholder="Location" required>
-          <input id="contactName" placeholder="Contact person" required>
-          <input id="contactNumber" placeholder="Contact number" required>
-          <select id="category">
-            <option value="mixed">Mixed</option>
-            <option value="veg">Veg</option>
-            <option value="non-veg">Non-veg</option>
-            <option value="bakery">Bakery</option>
-            <option value="packaged">Packaged</option>
-          </select>
-          <button type="submit">Publish Listing</button>
-        </form>
-      </div>
+      <section id="feedModule" class="panel module-page">
+        <div class="panel-head">
+          <div>
+            <p class="section-kicker">Operations</p>
+            <h2>Food feed</h2>
+          </div>
+          <div class="panel-tools">
+            <button type="button" class="ghost-btn" data-nav="prev">Previous</button>
+            <button type="button" class="ghost-btn" data-nav="next">Next</button>
+          </div>
+        </div>
 
-      <h3>Browse Feed</h3>
-      <form id="filterForm" class="inline-form">
-        <input id="searchInput" placeholder="Search food">
-        <input id="filterLocation" placeholder="Filter by location">
-        <input id="filterMinQty" type="number" min="1" placeholder="Min qty">
-        <select id="filterCategory">
-          <option value="">All categories</option>
-          <option value="mixed">Mixed</option>
-          <option value="veg">Veg</option>
-          <option value="non-veg">Non-veg</option>
-          <option value="bakery">Bakery</option>
-          <option value="packaged">Packaged</option>
-        </select>
-        <button type="submit">Apply</button>
-      </form>
-      <div id="foodList" class="list-grid"></div>
-      <div class="module-actions">
-        <button type="button" class="ghost-btn" data-nav="prev">Previous</button>
-        <button type="button" class="ghost-btn" data-nav="next">Next</button>
-      </div>
-    </section>
+        <div class="feed-layout">
+          <div class="feed-main">
+            <div id="addFoodPanel" class="subpanel">
+              <h3>Add Food Listing</h3>
+              <form id="addFoodForm" class="inline-form">
+                <input id="foodName" placeholder="Food name" required>
+                <input id="quantity" type="number" min="1" placeholder="Quantity" required>
+                <input id="location" placeholder="Location" required>
+                <input id="contactName" placeholder="Contact person" required>
+                <input id="contactNumber" placeholder="Contact number" required>
+                <select id="category">
+                  <option value="mixed">Mixed</option>
+                  <option value="veg">Veg</option>
+                  <option value="non-veg">Non-veg</option>
+                  <option value="bakery">Bakery</option>
+                  <option value="packaged">Packaged</option>
+                </select>
+                <button type="submit">Publish Listing</button>
+              </form>
+            </div>
 
-    <section id="requestModule" class="panel module-page">
-      <h2>Request Stream</h2>
-      <div id="requestList" class="list-grid"></div>
-      <div class="module-actions">
-        <button type="button" class="ghost-btn" data-nav="prev">Previous</button>
-        <button type="button" class="ghost-btn" data-nav="next">Next</button>
-      </div>
-    </section>
+            <div class="subpanel">
+              <h3>Browse Feed</h3>
+              <form id="filterForm" class="inline-form">
+                <input id="searchInput" placeholder="Search food">
+                <input id="filterLocation" placeholder="Filter by location">
+                <input id="filterMinQty" type="number" min="1" placeholder="Min qty">
+                <select id="filterCategory">
+                  <option value="">All categories</option>
+                  <option value="mixed">Mixed</option>
+                  <option value="veg">Veg</option>
+                  <option value="non-veg">Non-veg</option>
+                  <option value="bakery">Bakery</option>
+                  <option value="packaged">Packaged</option>
+                </select>
+                <button type="submit">Apply</button>
+              </form>
+            </div>
 
-    <section id="insightsModule" class="panel insights-panel module-page">
-      <h2>Rescue Heat</h2>
-      <div class="stats-grid">
-        <article class="stat-card">
-          <p>Total Listings</p>
-          <h3 id="statTotalFoods">0</h3>
-        </article>
-        <article class="stat-card">
-          <p>Total Quantity</p>
-          <h3 id="statTotalQuantity">0</h3>
-        </article>
-        <article class="stat-card">
-          <p>Low Stock Alerts</p>
-          <h3 id="statLowStock">0</h3>
-        </article>
-        <article class="stat-card">
-          <p>Added Last 7 Days</p>
-          <h3 id="statRecent">0</h3>
-        </article>
-        <article class="stat-card">
-          <p>Donor Food History</p>
-          <h3 id="statDonorHistory">0</h3>
-        </article>
-        <article class="stat-card">
-          <p>NGO Request History</p>
-          <h3 id="statNgoHistory">0</h3>
-        </article>
-      </div>
-      <div class="insights-grid">
-        <article>
-          <h3>Top Locations</h3>
-          <ul id="locationInsights" class="insight-list"></ul>
-        </article>
-        <article>
-          <h3>Category Mix</h3>
-          <ul id="categoryInsights" class="insight-list"></ul>
-        </article>
-        <article>
-          <h3>Food History</h3>
-          <ul id="foodHistoryList" class="insight-list"></ul>
-        </article>
-      </div>
-      <div class="module-actions">
-        <button type="button" class="ghost-btn" data-nav="prev">Previous</button>
-        <button type="button" class="ghost-btn" data-nav="next">Next</button>
-        <button type="button" class="ghost-btn" data-nav="first">Back To Login</button>
-      </div>
+            <div id="foodList" class="list-grid dashboard-list"></div>
+          </div>
+
+          <aside class="feed-side">
+            <article class="mini-card">
+              <p>Pickup status</p>
+              <strong>Live distribution board</strong>
+              <span>Use this screen to publish new food and monitor fresh listings in real time.</span>
+            </article>
+            <article class="mini-card accent-card">
+              <p>Route logic</p>
+              <strong>Closest NGO first</strong>
+              <span>Prepare this area for routing and pickup assignment workflows.</span>
+            </article>
+          </aside>
+        </div>
+      </section>
+
+      <section id="requestModule" class="panel module-page">
+        <div class="panel-head">
+          <div>
+            <p class="section-kicker">Coordination</p>
+            <h2>Request stream</h2>
+          </div>
+          <div class="panel-tools">
+            <button type="button" class="ghost-btn" data-nav="prev">Previous</button>
+            <button type="button" class="ghost-btn" data-nav="next">Next</button>
+          </div>
+        </div>
+
+        <div class="request-layout">
+          <div id="requestList" class="list-grid dashboard-list"></div>
+          <aside class="map-card">
+            <div class="map-card-head">
+              <div>
+                <p class="section-kicker">Live Map Tracking</p>
+                <h3>Pickup route concept</h3>
+              </div>
+              <span class="route-badge">In transit</span>
+            </div>
+            <div class="map-stage">
+              <div class="map-grid"></div>
+              <div class="map-dot map-dot-a"></div>
+              <div class="map-dot map-dot-b"></div>
+              <div class="map-dot map-dot-c"></div>
+              <div class="map-route">
+                <span class="route-node">Hotel</span>
+                <span class="route-line"></span>
+                <span class="route-node">NGO</span>
+                <span class="route-line"></span>
+                <span class="route-node">Delivery</span>
+              </div>
+            </div>
+            <ul class="route-notes">
+              <li>Show hotel location</li>
+              <li>Show NGO pickup route</li>
+              <li>Show delivery status</li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+
+      <section id="insightsModule" class="panel insights-panel module-page">
+        <div class="panel-head">
+          <div>
+            <p class="section-kicker">Analytics</p>
+            <h2>Rescue heat</h2>
+          </div>
+          <div class="panel-tools">
+            <button type="button" class="ghost-btn" data-nav="prev">Previous</button>
+            <button type="button" class="ghost-btn" data-nav="first">Back To Login</button>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat-card">
+            <p>Total Listings</p>
+            <h3 id="statTotalFoods">0</h3>
+          </article>
+          <article class="stat-card">
+            <p>Total Quantity</p>
+            <h3 id="statTotalQuantity">0</h3>
+          </article>
+          <article class="stat-card">
+            <p>Low Stock Alerts</p>
+            <h3 id="statLowStock">0</h3>
+          </article>
+          <article class="stat-card">
+            <p>Added Last 7 Days</p>
+            <h3 id="statRecent">0</h3>
+          </article>
+          <article class="stat-card">
+            <p>Donor Food History</p>
+            <h3 id="statDonorHistory">0</h3>
+          </article>
+          <article class="stat-card">
+            <p>NGO Request History</p>
+            <h3 id="statNgoHistory">0</h3>
+          </article>
+        </div>
+
+        <div class="insights-grid">
+          <article class="insight-panel">
+            <h3>Top Locations</h3>
+            <ul id="locationInsights" class="insight-list"></ul>
+          </article>
+          <article class="insight-panel">
+            <h3>Category Mix</h3>
+            <ul id="categoryInsights" class="insight-list"></ul>
+          </article>
+          <article class="insight-panel insight-panel-wide">
+            <h3>Food History</h3>
+            <ul id="foodHistoryList" class="insight-list"></ul>
+          </article>
+        </div>
+      </section>
     </section>
   </main>
 
