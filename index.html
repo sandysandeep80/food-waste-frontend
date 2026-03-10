@@ -76,11 +76,13 @@
 
           <form id="registerForm" class="form auth-card">
             <h3>Create User</h3>
-            <input id="registerUsername" type="text" placeholder="Username" required>
-            <input id="registerPassword" type="password" placeholder="Password" required>
-            <select id="registerRole" required>
-              <option value="admin">Admin</option>
-              <option value="donor">Donor</option>
+          <input id="registerUsername" type="text" placeholder="Username" required>
+          <input id="registerPassword" type="password" placeholder="Password" required>
+          <input id="registerProfileName" type="text" placeholder="Display name">
+          <input id="registerLocation" type="text" placeholder="Location">
+          <select id="registerRole" required>
+            <option value="admin">Admin</option>
+            <option value="donor">Donor</option>
               <option value="ngo">NGO</option>
             </select>
             <button type="submit">Register</button>
@@ -139,6 +141,7 @@
                 <input id="location" placeholder="Location" required>
                 <input id="contactName" placeholder="Contact person" required>
                 <input id="contactNumber" placeholder="Contact number" required>
+                <input id="expiryHours" type="number" min="1" max="72" placeholder="Expiry hours">
                 <select id="category">
                   <option value="mixed">Mixed</option>
                   <option value="veg">Veg</option>
@@ -146,6 +149,8 @@
                   <option value="bakery">Bakery</option>
                   <option value="packaged">Packaged</option>
                 </select>
+                <textarea id="foodDescription" placeholder="Food description"></textarea>
+                <input id="foodImage" type="file" accept="image/*">
                 <button type="submit">Publish Listing</button>
               </form>
             </div>
@@ -227,6 +232,48 @@
               <li>Show delivery status</li>
             </ul>
           </aside>
+        </div>
+      </section>
+
+      <section id="profileModule" class="panel module-page">
+        <div class="panel-head">
+          <div>
+            <p class="section-kicker">NGO Profile</p>
+            <h2>Profile and rescue record</h2>
+          </div>
+          <div class="panel-tools">
+            <button type="button" class="ghost-btn" data-nav="prev">Previous</button>
+            <button type="button" class="ghost-btn" data-nav="next">Next</button>
+          </div>
+        </div>
+
+        <div class="profile-layout">
+          <article class="profile-card">
+            <div class="profile-avatar">NGO</div>
+            <h3 id="profileNgoName">NGO Name</h3>
+            <p id="profileNgoLocation" class="muted">Location</p>
+            <div class="profile-metrics">
+              <div>
+                <span>Total Food Rescued</span>
+                <strong id="profileTotalRescued">0</strong>
+              </div>
+              <div>
+                <span>Deliveries</span>
+                <strong id="profileDeliveries">0</strong>
+              </div>
+              <div>
+                <span>Rating</span>
+                <strong id="profileRating">0.0</strong>
+              </div>
+            </div>
+          </article>
+
+          <form id="profileForm" class="subpanel form">
+            <h3>Update Profile</h3>
+            <input id="profileNameInput" type="text" placeholder="NGO name">
+            <input id="profileLocationInput" type="text" placeholder="Location">
+            <button type="submit">Save Profile</button>
+          </form>
         </div>
       </section>
 

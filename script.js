@@ -34,13 +34,16 @@ const state = {
   role: getStoredValue("role") || "",
   username: "",
   foodsHistory: [],
-  requestsHistory: []
+  requestsHistory: [],
+  pendingFoodImage: "",
+  profile: null
 };
 
 const moduleIds = [
   "accessModule",
   "feedModule",
   "requestModule",
+  "profileModule",
   "insightsModule"
 ];
 let activeModuleId = "accessModule";
@@ -102,6 +105,8 @@ function setModuleAvailability() {
 
     if (id === "accessModule") {
       isAvailable = true;
+    } else if (id === "profileModule") {
+      isAvailable = isLoggedIn && state.role === "ngo";
     } else if (!isLoggedIn) {
       isAvailable = false;
     } else {
@@ -217,6 +222,8 @@ function clearSession() {
   state.token = "";
   state.role = "";
   state.username = "";
+  state.pendingFoodImage = "";
+  state.profile = null;
   removeStoredValue("token");
   removeStoredValue("role");
   setAuthUI();
@@ -319,6 +326,56 @@ function resetFeedFilters() {
   }
 }
 
+function formatRemainingTime(expiresAt) {
+  if (!expiresAt) return "Expires soon";
+  const diffMs = new Date(expiresAt).getTime() - Date.now();
+  if (diffMs <= 0) return "Expired";
+
+  const totalMinutes = Math.floor(diffMs / (60 * 1000));
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  if (hours > 0) {
+    return `Expires in ${hours} hour${hours === 1 ? "" : "s"}${minutes ? ` ${minutes} min` : ""}`;
+  }
+
+  return `Expires in ${minutes} minute${minutes === 1 ? "" : "s"}`;
+}
+
+function renderProfile() {
+  const profile = state.profile;
+  const name = document.getElementById("profileNgoName");
+  const location = document.getElementById("profileNgoLocation");
+  const totalRescued = document.getElementById("profileTotalRescued");
+  const deliveries = document.getElementById("profileDeliveries");
+  const rating = document.getElementById("profileRating");
+  const nameInput = document.getElementById("profileNameInput");
+  const locationInput = document.getElementById("profileLocationInput");
+
+  if (!name || !location || !totalRescued || !deliveries || !rating || !nameInput || !locationInput) {
+    return;
+  }
+
+  if (!profile) {
+    name.textContent = "NGO Name";
+    location.textContent = "Location";
+    totalRescued.textContent = "0";
+    deliveries.textContent = "0";
+    rating.textContent = "0.0";
+    nameInput.value = "";
+    locationInput.value = "";
+    return;
+  }
+
+  name.textContent = profile.profileName || profile.username || "NGO Name";
+  location.textContent = profile.location || "Location not set";
+  totalRescued.textContent = profile.totalFoodRescued || 0;
+  deliveries.textContent = profile.deliveriesCount || 0;
+  rating.textContent = `${Number(profile.rating || 0).toFixed(1)} star`;
+  nameInput.value = profile.profileName || "";
+  locationInput.value = profile.location === "Not set" ? "" : (profile.location || "");
+}
+
 function renderFoods(foods) {
   const list = document.getElementById("foodList");
   list.innerHTML = "";
@@ -333,18 +390,34 @@ function renderFoods(foods) {
     card.className = "item";
     const canRequestPickup = state.role === "ngo";
     const requestAction = canRequestPickup
-      ? `<button data-action="request" data-food-id="${food._id}">Request Pickup</button>`
+      ? `
+          <button data-action="request" data-priority="normal" data-food-id="${food._id}">Request Pickup</button>
+          <button class="request-urgent" data-action="request" data-priority="urgent" data-food-id="${food._id}">Urgent Request</button>
+        `
       : "";
     const deleteAction = state.role === "admin" || state.role === "donor"
       ? `<button data-action="delete-food" data-food-id="${food._id}">Delete</button>`
       : "";
+    const imageBlock = food.imageUrl
+      ? `
+          <div class="food-media">
+            <img class="food-image" src="${food.imageUrl}" alt="${food.foodName}">
+          </div>
+        `
+      : "";
+    const descriptionBlock = food.description
+      ? `<div class="food-description">${food.description}</div>`
+      : "";
 
     card.innerHTML = `
+      ${imageBlock}
       <div class="item-head">
         <strong>${food.foodName}</strong>
         <span class="pill pill-approved">${food.category || "mixed"}</span>
       </div>
       <div class="muted">${food.location} | Qty: ${food.quantity}</div>
+      <div class="expiry-badge">${formatRemainingTime(food.expiresAt)}</div>
+      ${descriptionBlock}
       <div class="muted">Contact: ${food.contactName || "Not provided"} | ${food.contactNumber || "Not provided"}</div>
       <div class="item-actions">${requestAction}${deleteAction}</div>
     `;
@@ -363,6 +436,9 @@ function renderRequests(requests) {
 
   requests.forEach((req) => {
     const statusClass = `pill-${req.status || "pending"}`;
+    const priorityPill = req.priority === "urgent"
+      ? `<span class="pill pill-urgent">Urgent</span>`
+      : "";
     const adminButtons = state.role === "admin" && req.status === "pending"
       ? `
           <button data-action="approve" data-request-id="${req._id}">Approve</button>
@@ -375,7 +451,10 @@ function renderRequests(requests) {
     card.innerHTML = `
       <div class="item-head">
         <strong>${req.foodId?.foodName || "Food removed"}</strong>
-        <span class="pill ${statusClass}">${req.status}</span>
+        <div class="item-head-tags">
+          ${priorityPill}
+          <span class="pill ${statusClass}">${req.status}</span>
+        </div>
       </div>
       <div class="muted">NGO: ${req.userId?.username || "Unknown"}</div>
       <div class="muted">${req.foodId?.location || "No location"} | Qty: ${req.foodId?.quantity || "-"}</div>
@@ -482,6 +561,23 @@ async function loadRequests() {
   }
 }
 
+async function loadProfile() {
+  if (!state.token || state.role !== "ngo") {
+    state.profile = null;
+    renderProfile();
+    return;
+  }
+
+  try {
+    state.profile = await api("/auth/profile");
+    renderProfile();
+  } catch (err) {
+    state.profile = null;
+    renderProfile();
+    showToast(err.message);
+  }
+}
+
 async function loadInsights() {
   if (!state.token) {
     renderInsights({
@@ -519,13 +615,14 @@ async function handleLogin(event) {
 
     applySession(username, data.token, data.role);
     resetFeedFilters();
-    await Promise.all([loadFoods(), loadRequests(), loadInsights()]);
+    await Promise.all([loadFoods(), loadRequests(), loadInsights(), loadProfile()]);
     showToast(`Logged in as ${data.role}`);
     setAuthMessage(`Login successful. Welcome ${username}.`);
     setActiveModule("feedModule");
   } catch (err) {
     clearSession();
     renderRequests([]);
+    renderProfile();
     await loadInsights();
     setAuthMessage(`Login failed: ${err.message}`, true);
     showToast(`Login failed: ${err.message}`);
@@ -539,6 +636,8 @@ async function handleRegister(event) {
   const username = document.getElementById("registerUsername").value.trim();
   const password = document.getElementById("registerPassword").value;
   const role = document.getElementById("registerRole").value;
+  const profileName = document.getElementById("registerProfileName").value.trim();
+  const location = document.getElementById("registerLocation").value.trim();
   setFormBusy("registerForm", true, "Registering...");
   setAuthMessage("");
 
@@ -546,7 +645,7 @@ async function handleRegister(event) {
     await api("/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password, role })
+      body: JSON.stringify({ username, password, role, profileName, location })
     });
 
     // Auto-login after register so role switches immediately.
@@ -558,7 +657,7 @@ async function handleRegister(event) {
 
     applySession(username, loginData.token, loginData.role);
     resetFeedFilters();
-    await Promise.all([loadFoods(), loadRequests(), loadInsights()]);
+    await Promise.all([loadFoods(), loadRequests(), loadInsights(), loadProfile()]);
     showToast(`Registered and logged in as ${loginData.role}`);
     setAuthMessage(`Registered successfully as ${loginData.role}.`);
     event.target.reset();
@@ -603,15 +702,29 @@ async function handleAddFood(event) {
   const contactName = document.getElementById("contactName").value.trim();
   const contactNumber = document.getElementById("contactNumber").value.trim();
   const category = document.getElementById("category").value;
+  const description = document.getElementById("foodDescription").value.trim();
+  const expiryHours = document.getElementById("expiryHours").value;
+  const imageUrl = state.pendingFoodImage;
 
   try {
     const data = await api("/foods", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ foodName, quantity, location, contactName, contactNumber, category })
+      body: JSON.stringify({
+        foodName,
+        quantity,
+        location,
+        contactName,
+        contactNumber,
+        category,
+        description,
+        expiryHours,
+        imageUrl
+      })
     });
     showToast(data.message || "Food listed");
     event.target.reset();
+    state.pendingFoodImage = "";
     await Promise.all([loadFoods(), loadInsights()]);
     setActiveModule("feedModule");
   } catch (err) {
@@ -645,6 +758,7 @@ async function handleFoodListClick(event) {
 
   const action = actionButton.dataset.action;
   const foodId = actionButton.dataset.foodId;
+  const priority = actionButton.dataset.priority || "normal";
   if (!action || !foodId) return;
 
   try {
@@ -656,10 +770,14 @@ async function handleFoodListClick(event) {
       const data = await api("/requests", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ foodId })
+        body: JSON.stringify({ foodId, priority })
       });
-      showToast(data.message || "Request sent");
-      await loadRequests();
+      showToast(
+        priority === "urgent"
+          ? (data.message || "Urgent request sent")
+          : (data.message || "Request sent")
+      );
+      await Promise.all([loadRequests(), loadProfile()]);
       setActiveModule("requestModule");
       return;
     }
@@ -677,9 +795,28 @@ async function handleFoodListClick(event) {
   }
 }
 
+async function handleProfileSave(event) {
+  event.preventDefault();
+  try {
+    const profileName = document.getElementById("profileNameInput").value.trim();
+    const location = document.getElementById("profileLocationInput").value.trim();
+    const data = await api("/auth/profile", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ profileName, location })
+    });
+    showToast(data.message || "Profile updated");
+    await loadProfile();
+  } catch (err) {
+    showToast(err.message);
+  }
+}
+
 function handleLogout() {
   clearSession();
   resetFeedFilters();
+  state.profile = null;
+  renderProfile();
   renderRequests([]);
   loadInsights().catch(() => {});
   setActiveModule("accessModule");
@@ -704,9 +841,28 @@ function wireEvents() {
   bind("registerForm", "submit", handleRegister);
   bind("forgotPasswordForm", "submit", handleForgotPassword);
   bind("addFoodForm", "submit", handleAddFood);
+  bind("profileForm", "submit", handleProfileSave);
   bind("filterForm", "submit", async (event) => {
     event.preventDefault();
     await loadFoods();
+  });
+  bind("foodImage", "change", (event) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      state.pendingFoodImage = "";
+      return;
+    }
+    if (!file.type.startsWith("image/")) {
+      state.pendingFoodImage = "";
+      showToast("Please choose an image file");
+      event.target.value = "";
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      state.pendingFoodImage = typeof reader.result === "string" ? reader.result : "";
+    };
+    reader.readAsDataURL(file);
   });
   bind("logoutBtn", "click", handleLogout);
   bind("requestList", "click", handleRequestListClick);
@@ -722,5 +878,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   checkLocalSetupHint();
   await loadFoods();
   await loadRequests();
+  await loadProfile();
   await loadInsights();
 });
